@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -78,6 +78,13 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     kapt(libs.androidx.room.compiler)
+
+    // Retrofit
+    implementation(libs.retrofit)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
 
 kapt {
