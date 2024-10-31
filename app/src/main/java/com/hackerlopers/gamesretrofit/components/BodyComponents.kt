@@ -1,4 +1,4 @@
-package com.hackerlopers.components
+package com.hackerlopers.gamesretrofit.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,7 +30,12 @@ import com.hackerlopers.gamesretrofit.ui.theme.CustomBlack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(title: String, showBackButton: Boolean = false, onClickBakButton: () -> Unit) {
+fun MainTopBar(
+    title: String,
+    showBackButton: Boolean = false,
+    onClickBakButton: () -> Unit,
+    onClickAction: () -> Unit
+) {
     TopAppBar(
         title = { Text(text = title, color = Color.White, fontWeight = FontWeight.ExtraBold) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -40,6 +46,17 @@ fun MainTopBar(title: String, showBackButton: Boolean = false, onClickBakButton:
                 IconButton(onClick = { onClickBakButton() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "",
+                        tint = Color.White
+                    )
+                }
+            }
+        },
+        actions = {
+            if (!showBackButton) {
+                IconButton(onClick = { onClickAction() }) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
                         contentDescription = "",
                         tint = Color.White
                     )

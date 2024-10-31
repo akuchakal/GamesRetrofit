@@ -5,9 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import com.hackerlopers.gamesretrofit.navigation.NavManager
 import com.hackerlopers.gamesretrofit.ui.theme.GamesRetrofitTheme
 import com.hackerlopers.gamesretrofit.viewModel.GamesViewModel
-import com.hackerlopers.gamesretrofit.views.HomeView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         val gamesViewModel: GamesViewModel by viewModels()
         setContent {
             GamesRetrofitTheme {
-                HomeView(viewModel = gamesViewModel)
+                NavManager(viewModel = gamesViewModel)
             }
         }
     }

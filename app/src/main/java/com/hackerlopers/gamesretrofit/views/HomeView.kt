@@ -14,32 +14,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.hackerlopers.components.CardGame
-import com.hackerlopers.components.MainTopBar
+import androidx.navigation.NavController
+import com.hackerlopers.gamesretrofit.components.CardGame
+import com.hackerlopers.gamesretrofit.components.MainTopBar
 import com.hackerlopers.gamesretrofit.ui.theme.CustomBlack
 import com.hackerlopers.gamesretrofit.viewModel.GamesViewModel
 
 @Composable
-fun HomeView(viewModel: GamesViewModel) {
+fun HomeView(viewModel: GamesViewModel, navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = CustomBlack,
         topBar = {
-            MainTopBar(title = "API Games") {}
+            MainTopBar(
+                title = "API Games",
+                onClickBakButton = {},
+                onClickAction = { navController.navigate("SearchGameView") })
         }
     ) { innerPadding ->
-        ContentHomeView(viewModel, Modifier.padding(innerPadding))
+        ContentHomeView(viewModel, Modifier.padding(innerPadding), navController)
     }
 }
 
 
 @Composable
-fun ContentHomeView(viewModel: GamesViewModel, modifier: Modifier) {
+fun ContentHomeView(viewModel: GamesViewModel, modifier: Modifier, navController: NavController) {
     val games by viewModel.games.collectAsState()
-    LazyColumn(modifier = modifier
-        .fillMaxSize()
-        .background(color = CustomBlack)) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
         items(games) { item ->
-            CardGame(game = item, onClick = { })
+            CardGame(game = item, onClick = { navController.navigate("DetailView/${item.id}") })
             Text(
                 text = item.name,
                 fontWeight = FontWeight.ExtraBold,
