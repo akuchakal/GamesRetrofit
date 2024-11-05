@@ -6,6 +6,7 @@ class Constants {
         const val BASE_URL = "https://api.rawg.io/api/"
         const val ENDPOINT = "games"
         const val API_KEY = "?key=1d581082132d45dc964c69779cea4617"
+        const val SINGLE_API_KEY = "1d581082132d45dc964c69779cea4617"
     }
 }
 

@@ -24,4 +24,13 @@ class GamesRepository @Inject constructor(private val apiGames: ApiGames) {
         return null
     }
 
+    suspend fun getGamesByName(value: String): List<GameList> {
+        val response = apiGames.getGamesByName(value)
+        return if (response.isSuccessful) {
+            response.body()?.results ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+
 }

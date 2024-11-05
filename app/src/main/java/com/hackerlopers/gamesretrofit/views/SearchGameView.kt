@@ -47,15 +47,16 @@ fun contentSearchGameView(
     modifier: Modifier,
     navController: NavController
 ) {
-    var query by remember { mutableStateOf("") }
+//    var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     val games by viewModel.games.collectAsState()
+    val searchFieldValue by viewModel.searchFlow.collectAsState()
     SearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        query = query,
-        onQueryChange = { query = it },
+        query = searchFieldValue,
+        onQueryChange = { viewModel.setSearchValue(it) },
         onSearch = { active = false },
         active = active,
         onActiveChange = { active = it },
@@ -76,22 +77,19 @@ fun contentSearchGameView(
                 modifier = Modifier.clickable { navController.popBackStack() })
         }
     ) {
-        if (query.isNotEmpty()) {
-            val filterGames = games.filter { it.name.contains(query, ignoreCase = true) }
-            filterGames.forEach { item ->
-                TextButton(
-                    modifier = Modifier.padding(bottom = 10.dp, start = 10.dp),
-                    onClick = {
-                        navController.navigate("DetailView/${item.id}")
-                    },
-                ) {
-                    Text(
-                        text = item.name,
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+        games.forEach { item ->
+            TextButton(
+                modifier = Modifier.padding(bottom = 10.dp, start = 10.dp),
+                onClick = {
+                    navController.navigate("DetailView/${item.id}")
+                },
+            ) {
+                Text(
+                    text = item.name,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
     }

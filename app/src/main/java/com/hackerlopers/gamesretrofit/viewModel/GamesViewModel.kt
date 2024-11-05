@@ -11,8 +11,12 @@ import com.hackerlopers.gamesretrofit.repository.GamesRepository
 import com.hackerlopers.gamesretrofit.state.GameState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,16 +30,39 @@ class GamesViewModel @Inject constructor(private val repository: GamesRepository
     var state by mutableStateOf(GameState())
         private set
 
+    private var apiJob: Job? = null
+
+    private val _searchFlow = MutableStateFlow("")
+    val searchFlow = _searchFlow.asStateFlow()
+
+
     init {
         fetchGames()
+        searchGame()
     }
 
-    private fun fetchGames() {
-        viewModelScope.launch {
+    private fun fetchGames(search: String? = null) {
+        apiJob = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = repository.getGames()
+                val result =
+                    if (search.isNullOrEmpty()) repository.getGames() else repository.getGamesByName(
+                        search
+                    )
                 _games.value = result
             }
+        }
+    }
+
+    private fun searchGame() {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchFlow
+                .debounce(500)
+                .filter { it.isNotEmpty() } // Filter out empty input to avoid unnecessary requests
+                .collect { latestValue ->
+                    println("Searching for: $latestValue")
+                    apiJob?.cancel()
+                    fetchGames(latestValue)
+                }
         }
     }
 
@@ -54,7 +81,12 @@ class GamesViewModel @Inject constructor(private val repository: GamesRepository
         }
     }
 
+    fun setSearchValue(value: String) {
+        _searchFlow.value = value
+    }
+
     fun clean() {
         state = GameState()
+        apiJob?.cancel()
     }
 }
