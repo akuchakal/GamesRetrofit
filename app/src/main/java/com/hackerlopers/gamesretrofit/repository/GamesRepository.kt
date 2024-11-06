@@ -2,7 +2,9 @@ package com.hackerlopers.gamesretrofit.repository
 
 import com.hackerlopers.gamesretrofit.data.ApiGames
 import com.hackerlopers.gamesretrofit.model.GameList
+import com.hackerlopers.gamesretrofit.model.GamesModel
 import com.hackerlopers.gamesretrofit.model.SingleGameModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class GamesRepository @Inject constructor(private val apiGames: ApiGames) {
@@ -31,6 +33,11 @@ class GamesRepository @Inject constructor(private val apiGames: ApiGames) {
         } else {
             emptyList()
         }
+    }
+
+    suspend fun getGamesPaging(page: Int, pageSize: Int): GamesModel {
+        delay(2000L)
+        return apiGames.getGamesPaging(page, pageSize)
     }
 
 }

@@ -23,4 +23,11 @@ interface ApiGames {
         @Query("search") search: String,
         @Query("key") key: String = SINGLE_API_KEY
     ): Response<GamesModel>
+
+    @GET(ENDPOINT)
+    suspend fun getGamesPaging(
+        @Query("page") page: Int,
+        @Query("page_size") pageSize: Int,
+        @Query("key") key: String = SINGLE_API_KEY
+    ): GamesModel
 }
